@@ -28,7 +28,7 @@ jobs:
             echo "env=development" >> $GITHUB_OUTPUT
             echo "artifact-name=dragon-reel-dev" >> $GITHUB_OUTPUT
           else
-            echo "env=production" >> $GITHUB_OUTPUT
+            echo "env=prod" >> $GITHUB_OUTPUT
             echo "artifact-name=dragon-reel-prod" >> $GITHUB_OUTPUT
           fi
         shell: bash
@@ -38,7 +38,7 @@ jobs:
           if [ "${{ steps.build-type.outputs.env }}" == "development" ]; then
             echo "APP_URL=https://dragonsreel.blocmatrix.com/store" > .env.development
           else
-            echo "APP_URL=https://www.dragonsreel.com/store" > .env.production
+            echo "APP_URL=https://www.dragonsreel.com/store" > .env
           fi
         shell: bash
 
