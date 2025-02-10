@@ -8,6 +8,12 @@ win:
   certificateFile: cert.pfx
   certificatePassword: ""
 
+files:
+  - main.js
+  - package.json
+  - .env*
+  - dist
+
 build:
   env:
     development:
