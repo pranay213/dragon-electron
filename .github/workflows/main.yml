@@ -1,62 +1,52 @@
-name: Build Electron App
+name: Electron Build
 
 on:
   push:
     branches:
-      - main # Runs on every push to the main branch
-  pull_request:
-    branches:
-      - main
+      - develop # dev builds
+      - main # prod builds
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-      - name: 🛠 Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: 📦 Install Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: "20" # Use the latest Node.js version
+          node-version: "18"
 
-      - name: 📦 Install Dependencies
-        run: yarn install
+      - name: Install Dependencies
+        run: npm install
 
-      # Build Development Version (dragonreel-dev)
-      - name: 🔨 Build Development (dragonreel-dev)
-        env:
-          NODE_ENV: development
-          PRODUCT_NAME: dragonreel-dev
-          APP_URL: "https://dragonsreel.blocmatrix.com/"
-        run: npm run build:dev
+      - name: Determine Build Type
+        id: build-type
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+            echo "env=development" >> $GITHUB_OUTPUT
+            echo "artifact-name=dragon-reel-dev" >> $GITHUB_OUTPUT
+          else
+            echo "env=production" >> $GITHUB_OUTPUT
+            echo "artifact-name=dragon-reel-prod" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
 
-      # Build Production Version (dragonreel)
-      - name: 🔨 Build Production (dragonreel)
-        env:
-          NODE_ENV: production
-          PRODUCT_NAME: dragonreel
-          APP_URL: "https://www.dragonsreel.com/"
-        run: npm run build:prod
+      - name: Create .env File
+        run: |
+          if [ "${{ steps.build-type.outputs.env }}" == "development" ]; then
+            echo "APP_URL=https://dragonsreel.blocmatrix.com/store" > .env.development
+          else
+            echo "APP_URL=https://www.dragonsreel.com/store" > .env.production
+          fi
+        shell: bash
 
-      - name: 📤 Upload Build Artifacts (Dev)
-        uses: actions/upload-artifact@v4
+      - name: Build Electron App
+        run: npm run build:${{ steps.build-type.outputs.env }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: dragonreel-dev-build
-          path: dist/dragonreel-dev/
-
-      - name: 📤 Upload Build Artifacts (Prod)
-        uses: actions/upload-artifact@v4
-        with:
-          name: dragonreel-build
-          path: dist/dragonreel/
-
-      - name: 🚀 Release Production Build
-        if: github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/dragonreel/*.exe
-          tag_name: v1.0.${{ github.run_number }}
-          draft: false
-          prerelease: false
+          name: ${{ steps.build-type.outputs.artifact-name }}
+          path: dist/*.exe

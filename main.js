@@ -1,4 +1,7 @@
-require("dotenv").config();
+require("dotenv").config({
+  path: `.env.${process.env.NODE_ENV || "development"}`,
+});
+
 const { app, BrowserWindow } = require("electron");
 
 let mainWindow;
@@ -12,8 +15,7 @@ app.whenReady().then(() => {
     },
   });
 
-  // Load the correct URL based on environment
-  const appURL = process.env.APP_URL;
+  const appURL = process.env.APP_URL || "http://localhost:3000";
   mainWindow.loadURL(appURL);
 
   mainWindow.on("closed", () => {

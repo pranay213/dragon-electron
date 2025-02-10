@@ -1,26 +1,16 @@
-appId: "com.dragonreel.app"
-directories:
-  output: "dist"
-  buildResources: "assets/icons"
-
-files:
-  - "**/*"
-  - "!node_modules/*"
-  - "!dist/*"
-  - "!build/*"
-
+appId: com.dragonreel.app
+productName: dev-dragonreel
 win:
-  target: ["portable"]
-  icon: "assets/icons/icon.ico"
-  signingHashAlgorithms: ["sha256"]
-  certificateFile: "cert.pfx"
+  target: portable
+  icon: /assets/icons/icon.ico
+  signingHashAlgorithms:
+    - sha256
+  certificateFile: cert.pfx
   certificatePassword: ""
 
-extraMetadata:
-  name: "${PRODUCT_NAME}"
-
-extraResources:
-  - from: "assets"
-    to: "assets"
-
-publish: null
+build:
+  env:
+    development:
+      productName: "Dragon Reel (Dev)"
+    production:
+      productName: "Dragon Reel"

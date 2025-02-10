@@ -3,35 +3,31 @@
   "version": "1.0.0",
   "main": "main.js",
   "license": "MIT",
-  "description": "DragonReel - An immersive gaming experience",
-  "author": "Your Name or Blocmatrix IT Solutions",
   "scripts": {
-    "start": "electron -r dotenv/config main.js",
-    "dev": "cross-env NODE_ENV=development electron -r dotenv/config main.js",
-    "build:prod": "cross-env NODE_ENV=production PRODUCT_NAME=dragonreel APP_URL=https://www.dragonsreel.com/ electron-builder --win --config electron-builder.yml",
-    "build:dev": "cross-env NODE_ENV=development PRODUCT_NAME=dragonreel-dev APP_URL=https://dragonsreel.blocmatrix.com/ electron-builder --win --config electron-builder.yml"
+    "start": "electron main.js ",
+    "build": " electron-builder --win --ia32  ",
+    "start:dev": "cross-env NODE_ENV=development electron main.js",
+    "start:prod": "cross-env NODE_ENV=production electron main.js",
+    "build:dev": "electron-builder --win --ia32",
+    "build:prod": "electron-builder --win --ia32"
   },
   "build": {
     "appId": "com.dragonreel.app",
-    "productName": "${PRODUCT_NAME}",
-    "directories": {
-      "output": "dist/${PRODUCT_NAME}"
-    },
+    "productName": "dev-dragonreel",
     "win": {
       "target": "portable",
-      "icon": "assets/icons/icon.ico",
+      "icon": "/assets/icons/icon.ico",
       "signingHashAlgorithms": [
         "sha256"
       ],
       "certificateFile": "cert.pfx",
       "certificatePassword": ""
-    },
-    "extraMetadata": {
-      "APP_URL": "${APP_URL}"
     }
   },
   "dependencies": {
     "@react-native/gradle-plugin": "^0.77.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
     "expo": "^52.0.31",
     "expo-status-bar": "~2.0.1",
     "minimatch": "9.0.0",
@@ -41,9 +37,7 @@
     "react-native-web": "^0.19.13",
     "react-native-webview": "^13.13.2",
     "react-scripts": "^5.0.1",
-    "yarn": "^1.22.19",
-    "dotenv": "^16.4.5",
-    "cross-env": "^7.0.3"
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "electron": "^34.1.1",
