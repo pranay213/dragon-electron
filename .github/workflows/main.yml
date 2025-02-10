@@ -19,7 +19,7 @@ jobs:
       - name: 📦 Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "latest" # Use the latest Node.js version
+          node-version: "20" # Use the latest Node.js version
 
       - name: 📦 Install Dependencies
         run: yarn install
