@@ -8,8 +8,8 @@
     "build": " electron-builder --win --ia32  ",
     "start:dev": "cross-env NODE_ENV=development electron main.js",
     "start:prod": "cross-env NODE_ENV=production electron main.js",
-    "build:dev": "electron-builder --win --ia32",
-    "build:prod": "electron-builder --win --ia32"
+    "build:dev": "electron-builder --win --ia32 --config electron-builder.js",
+    "build:prod": "electron-builder --win --ia32 --config electron-builder.js"
   },
   "build": {
     "appId": "com.dragonreel.app",
