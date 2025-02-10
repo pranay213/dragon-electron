@@ -3,18 +3,18 @@ name: Electron Build
 on:
   push:
     branches:
-      - develop # dev builds
-      - main # prod builds
+      - develop
+      - main
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18"
 
@@ -36,9 +36,9 @@ jobs:
       - name: Create .env File
         run: |
           if [ "${{ steps.build-type.outputs.env }}" == "development" ]; then
-            echo "APP_URL=https://dragonsreel.blocmatrix.com/store" > .env.development
+            echo "APP_URL=http://dev-url.com" > .env.development
           else
-            echo "APP_URL=https://www.dragonsreel.com/store" > .env.production
+            echo "APP_URL=https://production-url.com" > .env.production
           fi
         shell: bash
 
@@ -46,7 +46,7 @@ jobs:
         run: npm run build:${{ steps.build-type.outputs.env }}
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build-type.outputs.artifact-name }}
           path: dist/*.exe
