@@ -22,7 +22,7 @@ jobs:
           node-version: 18
 
       - name: 📦 Install Dependencies
-        run: npm install
+        run: yarn install
 
       # Build Development Version (dragonreel-dev)
       - name: 🔨 Build Development (dragonreel-dev)
