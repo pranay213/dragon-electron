@@ -10,7 +10,7 @@ files:
   - "!build/*"
 
 win:
-  target: ["nsis", "portable"]
+  target: ["portable"]
   icon: "assets/icons/icon.ico"
   signingHashAlgorithms: ["sha256"]
   certificateFile: "cert.pfx"

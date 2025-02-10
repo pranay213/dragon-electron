@@ -1,7 +1,7 @@
 node_modules
 dist
-cert_request.csr
-cert.crt
-cert.pfx
+# cert_request.csr
+# cert.crt
+# cert.pfx
 
 
