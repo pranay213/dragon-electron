@@ -1,0 +1,41 @@
+{
+  "name": "dragon-reel-app",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron main.js ",
+    "build": " electron-builder --win --ia32  ",
+    "dist": "electron-builder --mac"
+  },
+  "build": {
+    "appId": "com.dragonreel.app",
+    "productName": "dragonreel",
+    "win": {
+      "target": "portable",
+      "icon": "/assets/icons/icon.ico",
+      "signingHashAlgorithms": [
+        "sha256"
+      ],
+      "certificateFile": "cert.pfx",
+      "certificatePassword": ""
+    }
+  },
+  "dependencies": {
+    "@react-native/gradle-plugin": "^0.77.0",
+    "expo": "^52.0.31",
+    "expo-status-bar": "~2.0.1",
+    "minimatch": "9.0.0",
+    "react": "18.3.1",
+    "react-dom": "^18.3.1",
+    "react-native": "0.73.3",
+    "react-native-web": "^0.19.13",
+    "react-native-webview": "^13.13.2",
+    "react-scripts": "^5.0.1",
+    "yarn": "^1.22.19"
+  },
+  "devDependencies": {
+    "electron": "^34.1.1",
+    "electron-builder": "^25.1.8"
+  }
+}

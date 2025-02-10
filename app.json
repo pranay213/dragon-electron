@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "dragonreel",
+    "slug": "dragonreel",
+    "version": "1.0.0",
+    "icon": "./assets/icons/icon.png",
+    "splash": {
+      "image": "./assets/icons/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f657a0f5-333c-41ef-9a9c-9f746e090f1c"
+      }
+    },
+    "android": {
+      "package": "com.pranayk213.dragonreel"
+    },
+    "ios": {
+      "bundleIdentifier": "com.pranayk213.dragonreel"
+    }
+  }
+}
