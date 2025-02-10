@@ -3,7 +3,7 @@ name: Build Electron App
 on:
   push:
     branches:
-      - main # Runs on every push to main branch
+      - main # Runs on every push to the main branch
   pull_request:
     branches:
       - main
@@ -19,7 +19,7 @@ jobs:
       - name: 📦 Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: "latest" # Use the latest Node.js version
 
       - name: 📦 Install Dependencies
         run: yarn install
