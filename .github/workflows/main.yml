@@ -1,26 +1,20 @@
 name: Electron Build
-
 on:
   push:
     branches:
       - develop
       - main
-
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "18"
-
       - name: Install Dependencies
         run: npm install
-
       - name: Determine Build Type
         id: build-type
         run: |
@@ -32,7 +26,6 @@ jobs:
             echo "artifact-name=dragon-reel-prod" >> $GITHUB_OUTPUT
           fi
         shell: bash
-
       - name: Create .env File
         run: |
           if [ "${{ steps.build-type.outputs.env }}" == "development" ]; then
@@ -41,10 +34,14 @@ jobs:
             echo "APP_URL=https://www.dragonsreel.com/store" > .env
           fi
         shell: bash
-
       - name: Build Electron App
-        run: npm run build:${{ steps.build-type.outputs.env }}
-
+        run: |
+          npm run build:${{ steps.build-type.outputs.env }}
+          if [ $? -ne 0 ]; then
+            echo "Build failed"
+            exit 1
+          fi
+        shell: bash
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
