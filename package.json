@@ -4,9 +4,12 @@
   "main": "main.js",
   "license": "MIT",
   "scripts": {
-    "start": "electron main.js ",
-    "build": " electron-builder --win --ia32  ",
-    "dist": "electron-builder --mac"
+    "start": "electron -r dotenv/config main.js",
+    "dev": "cross-env NODE_ENV=development electron -r dotenv/config main.js",
+    "build:prod": "cross-env NODE_ENV=production PRODUCT_NAME=dragonreel electron-builder --win --config electron-builder.yml",
+    "build:dev": "cross-env NODE_ENV=development PRODUCT_NAME=dragonreel-dev electron-builder --win --config electron-builder.yml",
+    "dist:prod": "electron-builder --mac --config build.prod.json",
+    "dist:dev": "electron-builder --mac --config build.dev.json"
   },
   "build": {
     "appId": "com.dragonreel.app",
@@ -32,7 +35,9 @@
     "react-native-web": "^0.19.13",
     "react-native-webview": "^13.13.2",
     "react-scripts": "^5.0.1",
-    "yarn": "^1.22.19"
+    "yarn": "^1.22.19",
+    "dotenv": "^16.4.5",
+    "cross-env": "^7.0.3"
   },
   "devDependencies": {
     "electron": "^34.1.1",

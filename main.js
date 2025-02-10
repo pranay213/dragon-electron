@@ -1,18 +1,20 @@
+require("dotenv").config();
 const { app, BrowserWindow } = require("electron");
 
 let mainWindow;
 
 app.whenReady().then(() => {
   mainWindow = new BrowserWindow({
-    fullscreen: true, // Open in full-screen mode
+    fullscreen: true,
     webPreferences: {
-      nodeIntegration: false, // Disable Node.js access for security
-      contextIsolation: true, // Improves security
+      nodeIntegration: false,
+      contextIsolation: true,
     },
   });
 
-  // Load a webpage inside the WebView
-  mainWindow.loadURL("https://dragonsreel.com/store/");
+  // Load the correct URL based on environment
+  const appURL = process.env.APP_URL;
+  mainWindow.loadURL(appURL);
 
   mainWindow.on("closed", () => {
     mainWindow = null;

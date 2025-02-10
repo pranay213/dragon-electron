@@ -1,34 +1,62 @@
-name: Build Electron macOS Application
+name: Build Electron App
 
 on:
   push:
     branches:
-      - main
+      - main # Runs on every push to main branch
   pull_request:
     branches:
       - main
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4 # Use the latest version
+      - name: 🛠 Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: 📦 Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18" # Use the required version of Node.js
+          node-version: 18
 
-      - name: Install dependencies
+      - name: 📦 Install Dependencies
         run: npm install
 
-      - name: Build Electron app
-        run: npm run dist # Ensure your package.json has a script for `dist`
+      # Build Development Version (dragonreel-dev)
+      - name: 🔨 Build Development (dragonreel-dev)
+        env:
+          NODE_ENV: development
+          PRODUCT_NAME: dragonreel-dev
+          APP_URL: "https://dragonsreel.blocmatrix.com/"
+        run: npm run build:dev
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4 # Use v4 instead of v2
+      # Build Production Version (dragonreel)
+      - name: 🔨 Build Production (dragonreel)
+        env:
+          NODE_ENV: production
+          PRODUCT_NAME: dragonreel
+          APP_URL: "https://www.dragonsreel.com/"
+        run: npm run build:prod
+
+      - name: 📤 Upload Build Artifacts (Dev)
+        uses: actions/upload-artifact@v4
         with:
-          name: electron-app
-          path: ./dist/mac # Path to your build output folder
+          name: dragonreel-dev-build
+          path: dist/dragonreel-dev/
+
+      - name: 📤 Upload Build Artifacts (Prod)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dragonreel-build
+          path: dist/dragonreel/
+
+      - name: 🚀 Release Production Build
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/dragonreel/*.exe
+          tag_name: v1.0.${{ github.run_number }}
+          draft: false
+          prerelease: false
