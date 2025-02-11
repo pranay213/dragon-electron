@@ -1,49 +1,25 @@
-name: Electron Build
-on:
-  push:
-    branches:
-      - develop
-      - main
+name: Build/release
+
+on: push
+
 jobs:
-  build:
-    runs-on: windows-latest
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
-      - name: Install Dependencies
-        run: npm install
-      - name: Determine Build Type
-        id: build-type
-        run: |
-          if [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-            echo "env=development" >> $GITHUB_OUTPUT
-            echo "artifact-name=dragon-reel-dev" >> $GITHUB_OUTPUT
-          else
-            echo "env=prod" >> $GITHUB_OUTPUT
-            echo "artifact-name=dragon-reel-prod" >> $GITHUB_OUTPUT
-          fi
-        shell: bash
-      - name: Create .env File
-        run: |
-          if [ "${{ steps.build-type.outputs.env }}" == "development" ]; then
-            echo "APP_URL=https://dragonsreel.blocmatrix.com/store" > .env.development
-          else
-            echo "APP_URL=https://www.dragonsreel.com/store" > .env
-          fi
-        shell: bash
-      - name: Build Electron App
-        run: |
-          npm run build:${{ steps.build-type.outputs.env }}
-          if [ $? -ne 0 ]; then
-            echo "Build failed"
-            exit 1
-          fi
-        shell: bash
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+          node-version: 18
+
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
         with:
-          name: ${{ steps.build-type.outputs.artifact-name }}
-          path: dist/*.exe
+          release: false  # Disable automatic release
