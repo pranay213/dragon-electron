@@ -14,7 +14,6 @@ app.whenReady().then(() => {
       nodeIntegration: false, // Keep this false for security
       contextIsolation: true,
       devTools: true,
-      preload: path.join(__dirname, "preload.js"), // Use preload to pass env variables
     },
   });
 

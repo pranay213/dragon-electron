@@ -42,20 +42,20 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dev-build
-          path: build/dev/
+          path: dist/dev/
 
       - name: Upload Production Build Artifact
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: live-build
-          path: build/live/
+          path: dist/live/
 
       - name: Create GitHub Release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
-          files: build/live/*
+          files: dist/live/*
           tag_name: v1.0.${{ github.run_number }}
           name: Release v1.0.${{ github.run_number }}
           body: |
