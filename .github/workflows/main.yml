@@ -1,35 +1,67 @@
-name: Build/Release
+name: Electron Build & Release
 
-on: push
+on:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+    branches:
+      - main
+      - development
 
 jobs:
-  release:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+  build:
+    runs-on: windows-latest
 
     steps:
-      - name: Check out Git repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Node.js, NPM, and Yarn
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm install
 
-      - name: Build Electron app
+      - name: Clean Build Directory
+        run: npm run clean
+
+      - name: Development Build
+        if: github.ref == 'refs/heads/development'
+        run: npm run dev-build
+
+      - name: Production Build
+        if: github.ref == 'refs/heads/main'
         run: npm run build
 
-      - name: Package Electron app
-        run: npm run dist  # Assumes "dist" script is set up for electron-builder
-
-      - name: Upload release artifacts
+      - name: Upload Dev Build Artifact
+        if: github.ref == 'refs/heads/development'
         uses: actions/upload-artifact@v4
         with:
-          name: electron-build
-          path: dist/  # Path where electron-builder stores output files
+          name: dev-build
+          path: build/dev/
+
+      - name: Upload Production Build Artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-build
+          path: build/live/
+
+      - name: Create GitHub Release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/live/*
+          tag_name: v1.0.${{ github.run_number }}
+          name: Release v1.0.${{ github.run_number }}
+          body: |
+            New production build is available.  
+            - Built on ${{ github.event.head_commit.timestamp }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

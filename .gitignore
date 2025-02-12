@@ -1,5 +1,6 @@
 node_modules
 dist
+dev
 # cert_request.csr
 # cert.crt
 # cert.pfx

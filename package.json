@@ -1,40 +1,32 @@
 {
-  "name": "dragon-reel-app",
+  "name": "electron-app",
   "version": "1.0.0",
+  "description": "My Electron App",
   "main": "main.js",
-  "license": "MIT",
   "scripts": {
-    "start": "electron main.js ",
-    "build": " electron-builder --win --ia32  ",
-    "start:dev": "cross-env NODE_ENV=development electron main.js",
-    "start:prod": "cross-env NODE_ENV=production electron main.js",
-    "build:dev": "electron-builder --win --ia32 --config electron-builder.js",
-    "build:prod": "electron-builder --win --ia32 --config electron-builder.js"
+    "clean": "rimraf dist/* && rimraf dev*",
+    "dev-build": "rimraf dist/dev/* && mkdirp dist/dev && cross-env NODE_ENV=development electron-builder --win --ia32 --config.directories.output=dist/dev --config.extraMetadata.appId=com.dragonreel.dev --config.extraMetadata.productName=\"DragonReel Dev\"",
+    "build": "rimraf dist/live/* && mkdirp dist/live && cross-env NODE_ENV=production electron-builder --win --ia32 --config.directories.output=dist/live --config.extraMetadata.appId=com.dragonreel.app --config.extraMetadata.productName=\"DragonReel\"",
+    "start": "cross-env NODE_ENV=development electron .",
+    "build-static": "electron-builder"
   },
   "build": {
-    "appId": "com.dragonreel.app",
-    "productName": "dev-dragonreel",
     "win": {
       "target": "portable",
-      "icon": "/assets/icons/icon.ico",
-      "signingHashAlgorithms": [
-        "sha256"
-      ],
-      "certificateFile": "cert.pfx",
-      "certificatePassword": ""
+      "icon": "assets/icons/icon.ico",
+      "signtoolOptions": {
+        "certificateFile": "cert.pfx",
+        "certificatePassword": "test",
+        "rfc3161TimeStampServer": "http://timestamp.digicert.com"
+      }
     }
   },
-  "dependencies": {
-    "cross-env": "^7.0.3",
-    "dotenv": "^16.4.7",
-    "minimatch": "9.0.0",
-    "react": "18.3.1",
-    "react-dom": "^18.3.1",
-    "react-scripts": "^5.0.1",
-    "yarn": "^1.22.19"
-  },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "electron": "^34.1.1",
     "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
   }
 }
