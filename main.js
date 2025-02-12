@@ -1,42 +1,35 @@
-require("dotenv").config({
-  path: `.env.${process.env.NODE_ENV || "development"}`,
-});
-
-const { app, BrowserWindow } = require("electron");
+const dotenv = require("dotenv");
 const path = require("path");
 
-let mainWindow;
+// Dynamically set the .env file based on NODE_ENV or custom logic
+const envFile =
+  process.env.NODE_ENV === "production"
+    ? ".env.production"
+    : ".env.development";
 
-app.whenReady().then(() => {
-  mainWindow = new BrowserWindow({
+dotenv.config({ path: path.resolve(__dirname, envFile) });
+const { app, BrowserWindow } = require("electron");
+
+function createWindow() {
+  // Create the browser window.
+  const win = new BrowserWindow({
     fullscreen: true,
     webPreferences: {
-      nodeIntegration: false, // Keep this false for security
+      nodeIntegration: false,
       contextIsolation: true,
-      devTools: true,
     },
   });
 
-  const env = process.env.NODE_ENV || "development";
-  console.log("Running in:", env);
+  // Load a URL directly into the BrowserWindow
+  const appUrl = process.env.APP_URL;
 
-  const appURL = process.env.APP_URL; // Fallback to Google
-  console.log("appURL:", appURL); // Fixed alert issue
+  win.loadURL(appUrl);
+}
 
-  if (!appURL) {
-    console.error("❌ ERROR: appURL is not defined!");
-  }
-
-  console.log("Loading:", appURL);
-  mainWindow.loadURL(appURL).catch((err) => {
-    console.error("❌ Failed to load URL:", err);
-  });
-
-  mainWindow.on("closed", () => {
-    mainWindow = null;
-  });
-});
+app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
 });
